@@ -68,8 +68,8 @@ Target bitrate is the ceiling the encoder is allowed to reach, not a volume it m
 
 | | Resolution | Path | Actual bitrate |
 |---|---|---|---|
-| Before | 1920x1080 | encode only | 2438 kbps |
-| After | 1280x720 → 1920x1080 | Streaming + 1.5× MagicSR | 1526 kbps |
+| Before | 1280x720 | encode only | 1838 kbps |
+| After | 854x480 → 1280x720 | Streaming + 1.5× MagicSR | 826 kbps |
 
 ## Streaming Technical FAQ
 
