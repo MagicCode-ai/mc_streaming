@@ -4,6 +4,9 @@ A bitstream-saving module and a companion enhancer for the video encoder, reduci
 
 Using MagicCode AI and human visual principles, it detects residual coefficients that do not help quality, removes them, and keeps the ones that do.
 
+- Website: https://www.magiccode-ai.com/
+- Product page: https://www.magiccode-ai.com/products/ai-streaming
+
 ## What is MagicCode Streaming
 
 MagicCode Streaming is a module that saves encoded bitstream. Based on MagicCode AI algorithms and human visual principles, it detects which residual coefficients in the bitstream do not help improve picture quality and removes them, while keeping the coefficients that do help. This reduces the compressed video that needs to be transmitted or stored without lowering subjective quality, saving bandwidth and storage for customers.
@@ -11,11 +14,14 @@ MagicCode Streaming is a module that saves encoded bitstream. Based on MagicCode
 Deployment topology:
 
 ```
-Sender:  Input YUV → Encode → Streaming → Send
-                                         ↓
-                                      Network
-                                         ↓
-Receiver:                         Receive → Decode → Play
+Sender:  Input YUV ──────────────────┐
+              │                      │
+              ↓                      ↓
+           Encode ─────────→ Streaming → Send
+                                        ↓
+                                     Network
+                                        ↓
+Receiver:                        Receive → Decode → Play
 ```
 
 Connect it after the video encoder. Pass the encoder’s input video and output bitstream; MagicCode Streaming rewrites the bitstream before it enters the send (or store) path. The receiver uses a standard decoder.
