@@ -56,7 +56,7 @@ Target bitrate is the ceiling the encoder is allowed to reach, not a volume it m
 | Apple M3 hardware encode | 2.56 ms |
 | Streaming rewrite | 2.93 ms |
 
-720p hardware encode is about 2.5–3.4 ms; MCS adds about 3–3.7 ms, still about 5.4 ms total. That is far below the 33 ms frame interval. Real-time pressure is bitrate and queuing, not these few milliseconds of CPU. Turning on mc_streaming trades a negligible rewrite delay for lower on-the-wire bitrate and a more stable frame interval — not software encode for hardware encode.
+720p hardware encode is about 2.56 ms; MCS adds about 2.93 ms, still about 5.4 ms total. That is far below the 33 ms frame interval. Real-time pressure is bitrate and queuing, not these few milliseconds of CPU. Turning on mc_streaming trades a negligible rewrite delay for lower on-the-wire bitrate and a more stable frame interval — not software encode for hardware encode.
 
 ### 2. Mobile package size increase <1 MByte
 
