@@ -4,8 +4,8 @@ A bitstream-saving module and a companion enhancer for the video encoder, reduci
 
 Using MagicCode AI and human visual principles, it detects residual coefficients that do not help quality, removes them, and keeps the ones that do.
 
-- Website: https://www.magiccode-ai.com/
-- Product page: https://www.magiccode-ai.com/products/ai-streaming
+- Website: [https://www.magiccode-ai.com/](https://www.magiccode-ai.com/)
+- Product page: [https://www.magiccode-ai.com/products/ai-streaming](https://www.magiccode-ai.com/products/ai-streaming)
 
 ## What is MagicCode Streaming
 
