@@ -64,12 +64,12 @@ Target bitrate is the ceiling the encoder is allowed to reach, not a volume it m
 |---|---|
 | 900K | 958K |
 
-## Even better together with MagicSR
+## Even better together with [MagicSR](https://github.com/MagicCode-ai/SuperResolution)
 
 | | Resolution | Path | Actual bitrate |
 |---|---|---|---|
 | Before | 1280x720 | encode only | 1838 kbps |
-| After | 854x480 → 1280x720 | Streaming + 1.5× MagicSR |1026 kbps |
+| After | 854x480 → 1280x720 | Streaming + 1.5× [MagicSR](https://github.com/MagicCode-ai/SuperResolution) |1026 kbps |
 
 ## Streaming Technical FAQ
 
