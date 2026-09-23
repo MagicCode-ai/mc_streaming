@@ -48,7 +48,7 @@ Target bitrate is the ceiling the encoder is allowed to reach, not a volume it m
 
 ## What we need to pay for these values
 
-### 1. For 720p video, <4 ms extra per-frame latency on M3
+### 1. For 720p video, <3 ms extra per-frame latency on M3
 
 | Path | Per-frame time |
 |---|---|
