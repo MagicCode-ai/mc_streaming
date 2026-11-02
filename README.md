@@ -14,9 +14,9 @@ MagicCode Streaming is a module that saves encoded bitstream. Based on MagicCode
 Deployment topology:
 
 ```
-Sender:  Input YUV ──────────────────┐
-              │                      │
-              ↓                      ↓
+Sender:  Input YUV
+              │
+              ↓
            Encode ─────────→ Streaming → Send
                                         ↓
                                      Network
