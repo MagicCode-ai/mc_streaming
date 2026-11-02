@@ -30,9 +30,9 @@ Connect it after the video encoder. Pass the encoder’s input video and output 
 
 ### 1. Save precious bandwidth during video transmission
 
-In typical conferencing scenarios, MagicCode Streaming can save around 20% bandwidth; in VOD and live-streaming scenarios, it can save around 15% bandwidth.
+In typical conferencing scenarios, MagicCode Streaming can save around 25% bandwidth; in VOD and live-streaming scenarios, it can save around 15% bandwidth.
 
-Savings depend on the video scene and encoding bitrate. 20% or 15% is not guaranteed for every video.
+Savings depend on the video scene and encoding bitrate. 25% or 15% is not guaranteed for every video.
 
 ### 2. Improve the interactive experience of video calls
 
@@ -44,7 +44,7 @@ With mc_streaming on, under almost identical BWE / RTT and the same 1800 kbps ta
 
 | Metric | streaming on | streaming off | vs off |
 |---|---|---|---|
-| Mean send bitrate | 1326 kbps | 1610 kbps | Saves 17.6% |
+| Mean send bitrate | 1198 kbps | 1610 kbps | Saves 25.6% |
 | Bandwidth estimate | 5339 kbps | 5372 kbps | Same estimate accuracy |
 | RTT | 19.3 ms | 18.9 ms | Essentially the same |
 | Mean fps | 28.2 | 24.5 | Frame rate up 15.1% |
@@ -75,7 +75,7 @@ Target bitrate is the ceiling the encoder is allowed to reach, not a volume it m
 | | Resolution | Path | Actual bitrate |
 |---|---|---|---|
 | Before | 1280x720 | encode only | 1838 kbps |
-| After | 854x480 → 1280x720 | Streaming + 1.5× [MagicSR](https://github.com/MagicCode-ai/SuperResolution) |1026 kbps |
+| After | 854x480 → 1280x720 | Streaming + 1.5× [MagicSR](https://github.com/MagicCode-ai/SuperResolution) |826 kbps |
 
 ## Streaming Technical FAQ
 
