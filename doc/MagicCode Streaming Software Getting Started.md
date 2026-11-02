@@ -1,17 +1,19 @@
 # MagicCode Streaming Software Getting Started
 
-**Document Version:** v1.0.0. **Release Date:** September 19, 2026.
+**Document Version:** v2.0.0. **Release Date:** November 1, 2026.
 
 ## 1. What you integrate
 
 | Item | Path |
 |------|------|
 | Header | `include/mc_streaming.h` (also needs `include/mcs_err.h`) |
-| Android library | `lib/android/arm64-v8a/libMagicCode_streaming.a` |
-| iOS library | `lib/ios/libMagicCode_streaming.a` |
-| Version | `mc_streaming_get_version()` → `"1.0.0"` |
+| Android library | `lib/android/arm64-v8a/libmc_streaming.a` (shared: `libmc_streaming.so`) |
+| iOS library | `lib/ios/libmc_streaming.a` (shared: `libmc_streaming.dylib`) |
+| macOS arm64 | `lib/macos/libmc_streaming.a` (shared: `libmc_streaming.dylib`) |
+| H.265 plugin | Android `libmcs_codec_h265.so`, iOS `mcs_codec_h265.framework`, macOS `libmcs_codec_h265.dylib`. No static H.265 archive. |
+| Version | `mc_streaming_get_version()` → `"2.0.0"` |
 
-The library sits **after** your H.264 encoder. Each encoded Annex-B AU plus the matching source frame (I420, NV12, or NV21) is passed in; a rewritten Annex-B AU comes out.
+The library sits **after** the H.264 or H.265 encoder. Each encoded Annex-B AU plus the matching source frame (I420, NV12, or NV21) is passed in; a rewritten Annex-B AU comes out. H.265 requires the plugin. Select the codec with `mc_streaming_control` / `MCS_CMD_SET_PARAMS` (`codec_type`). `dec_pic_reenc` 0 is syntax rewrite; `1` decodes the AU and re-encodes the residual. `jnd_enable` 0 skips JND. Not calling the library is streaming off.
 
 ## 2. Call sequence
 

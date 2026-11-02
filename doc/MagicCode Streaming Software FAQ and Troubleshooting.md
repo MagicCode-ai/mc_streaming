@@ -1,6 +1,6 @@
 # MagicCode Streaming Software FAQ and Troubleshooting
 
-**Document Version:** v1.0.0. **Release Date:** September 19, 2026.
+**Document Version:** v2.0.0. **Release Date:** November 1, 2026.
 
 ## 1. General
 
@@ -29,13 +29,13 @@ They look similar in that both use less bandwidth in low-complexity scenes and m
 MagicCode Streaming uses human visual principles—relative sensitivity, masking, nonlinearity, and similar properties—and AI analysis of picture content and pixels. It keeps information where the eye can tell a difference and removes information where the eye cannot, so bitrate drops with no perceptible change. Objective metrics such as PSNR and SSIM compare pixels and content statistics, so those scores will fall. The goal of MagicCode Streaming is bitrate savings with no subjective quality loss. Evaluate output quality by subjective viewing, not by objective metrics.
 
 **Does the software upload my video or bitstream?**  
-No. v1.0.0 does not report YUV or Annex-B payloads. The standard SDK sends a small technical packet (app-instance UUID, device model, SDK version, average per-frame time, size averages, error code, report count) for billing / license metering and issue diagnosis. It does not send a device IP in the packet. See the Privacy Policy and Data Reporting Notice. There is no public switch to turn telemetry off; ask MagicCode in writing if you need a non-reporting archive.
+No. v2.0.0 does not report YUV or Annex-B payloads. The standard SDK sends a small technical packet (app-instance UUID, device model, SDK version, average per-frame time, size averages, error code, report count) for billing / license metering and issue diagnosis. It does not send a device IP in the packet. See the Privacy Policy and Data Reporting Notice. There is no public switch to turn telemetry off; ask MagicCode in writing if you need a non-reporting archive.
 
 **Which codec profile should I use?**  
-MagicCode Streaming provides two profiles: `MCS_H264_ZERO_DELAY_8BIT` and `MCS_H264_8BIT`. `MCS_H264_8BIT` is designed for any video scenario and can be used in any video application; it is slightly slower because the algorithm does more work to cover a wide range of scenes. `MCS_H264_ZERO_DELAY_8BIT` is designed for ultra-low-latency applications such as video calls.
+H.264: `MCS_H264_ZERO_DELAY_8BIT` (real-time) and `MCS_H264_8BIT` (P and B, higher CPU). H.265: `MCS_H265_ZERO_DELAY_8BIT` and `MCS_H265_8BIT`, after the `mcs_codec_h265` plugin is loaded. `dec_pic_reenc` 1 re-encodes from the decoded picture. `jnd_enable` 0 skips JND. Not calling the library is streaming off.
 
 **How do I read the version?**  
-`mc_streaming_get_version()` returns `"1.0.0"`.
+`mc_streaming_get_version()` returns `"2.0.0"`.
 
 ## 2. Integration FAQ
 
@@ -66,8 +66,8 @@ Yes. Width/height must match coded or display size (`MCS_ERR_CROP`).
 
 ## 5. Diagnostic checklist
 
-1. `mc_streaming_get_version()` is `1.0.0`.
+1. `mc_streaming_get_version()` is `2.0.0`.
 2. Record `codec_type`, width, height, `frame_type`, `au_size`, return code, `bs_size`.
-3. Confirm `libmc_streaming.a` is on the native link line.
-4. Confirm hardware encoder is H.264 Annex-B, not HEVC.
+3. Confirm `libmc_streaming.a` (or the shared library) is on the native link line. For H.265, confirm `mcs_codec_h265` is loaded.
+4. Confirm the encoder Annex-B matches the selected codec (H.264 or H.265). `MCS_ERR_CODEC_UNAVAILABLE` means the H.265 plugin is missing.
 5. Review Known Issues and the EULA before a store build.

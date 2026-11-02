@@ -22,7 +22,8 @@ enum {
     MCS_ERR_SIZE    = -7,  /* width/height above 32*1024, or size/refs/B change not allowed */
     MCS_ERR_KEY     = -8,  /* caller key/delta does not match whether the AU is I/IDR */
     MCS_ERR_CROP    = -9,  /* YUV width/height does not match coded or display size */
-    MCS_ERR_BYPASS  = -10  /* still copying input NALs until the next I or IDR */
+    MCS_ERR_BYPASS  = -10, /* still copying input NALs until the next I or IDR */
+    MCS_ERR_CODEC_UNAVAILABLE = -11 /* no plugin registered for the requested codec_type */
 };
 
 #define mcs_ok          MCS_OK
@@ -36,6 +37,7 @@ enum {
 #define mcs_err_key     MCS_ERR_KEY
 #define mcs_err_crop    MCS_ERR_CROP
 #define mcs_err_bypass  MCS_ERR_BYPASS
+#define mcs_err_codec_unavailable MCS_ERR_CODEC_UNAVAILABLE
 
 #ifdef __cplusplus
 }

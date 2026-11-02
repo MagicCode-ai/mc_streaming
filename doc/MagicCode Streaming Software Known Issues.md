@@ -1,20 +1,21 @@
 # MagicCode Streaming Software Known Issues
 
-**Document Version:** v1.0.0. **Release Date:** September 19, 2026.
+**Document Version:** v2.0.0. **Release Date:** November 1, 2026.
 
 ## 1. Scope
 
-Known limitations for MagicCode Streaming Software v1.0.0.
+Known limitations for MagicCode Streaming Software v2.0.0.
 
 ## 2. Functional constraints
 
 - I/IDR pictures are **copied**. Residual processing applies to P/B only.
-- 8-bit progressive H.264 only. Interlaced and 10-bit streams are not supported.
-- YUV must be I420. Other pixel formats are not accepted.
+- 8-bit progressive H.264, and 8-bit 4:2:0 H.265 when the plugin is loaded. Interlaced and 10-bit streams are not supported.
+- H.265 has no static archive. A missing plugin returns `MCS_ERR_CODEC_UNAVAILABLE`.
+- YUV is I420, NV12, or NV21, matching session `pic_csp`.
 - `frame_type` must match the AU. A mismatch returns `MCS_ERR_KEY` (the AU may still be copied).
 - Output buffer smaller than a copy-sized AU returns `MCS_ERR_OUTPUT` with nothing emitted.
 - Session is single-threaded per handle.
-- Published mobile archives are arm64 device only (Android arm64-v8a, iOS device). No 32-bit, no iOS Simulator, no Windows SDK in this drop.
+- Published archives in this drop: Android arm64-v8a, iOS device arm64, macOS arm64. No 32-bit, no iOS Simulator.
 
 ## 3. Quality and bitstream
 

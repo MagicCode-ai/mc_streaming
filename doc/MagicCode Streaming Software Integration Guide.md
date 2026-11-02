@@ -1,13 +1,14 @@
 # MagicCode Streaming Software Integration Guide
 
-**Document Version:** v1.0.0. **Release Date:** September 19, 2026.
+**Document Version:** v2.0.0. **Release Date:** November 1, 2026.
 
 ## 1. Libraries
 
 | Platform | Archive | Header |
 |----------|---------|--------|
-| Android arm64-v8a | `lib/android/arm64-v8a/libMagicCode_streaming.a` | `include/mc_streaming.h` |
-| iOS / iPadOS arm64 | `lib/ios/libMagicCode_streaming.a` | `include/mc_streaming.h` |
+| Android arm64-v8a | `lib/android/arm64-v8a/libmc_streaming.a` or `libmc_streaming.so`; H.265 `libmcs_codec_h265.so` | `include/mc_streaming.h` |
+| iOS / iPadOS arm64 | `lib/ios/libmc_streaming.a` or `libmc_streaming.dylib`; H.265 `mcs_codec_h265.framework` | `include/mc_streaming.h` |
+| macOS arm64 | `lib/macos/libmc_streaming.a` or `libmc_streaming.dylib`; H.265 `libmcs_codec_h265.dylib` | `include/mc_streaming.h` |
 
 Also add `include/` (for `mcs_err.h`) to the include path. Do not add `src/` to a shipping app unless you are debugging internals.
 
@@ -20,7 +21,7 @@ set(MAGIC_STREAMING_ROOT "/path/to/magic_steaming")
 add_library(magic_streaming STATIC IMPORTED)
 set_target_properties(magic_streaming PROPERTIES
     IMPORTED_LOCATION
-    ${MAGIC_STREAMING_ROOT}/lib/android/arm64-v8a/libMagicCode_streaming.a)
+    ${MAGIC_STREAMING_ROOT}/lib/android/arm64-v8a/libmc_streaming.a)
 
 target_include_directories(your_jni PRIVATE ${MAGIC_STREAMING_ROOT}/include)
 
@@ -55,7 +56,7 @@ $(inherited) /path/to/magic_steaming/include
 Other linker flags (force-load is required):
 
 ```
--force_load /path/to/magic_steaming/lib/ios/libMagicCode_streaming.a
+-force_load /path/to/magic_steaming/lib/ios/libmc_streaming.a
 -lc++
 -framework CoreFoundation
 -framework CoreVideo
@@ -72,7 +73,7 @@ Constraints:
 
 ## 4. Encoder integration rules
 
-1. Produce Annex-B (start codes), not AVCC length prefixes.
+1. Produce Annex-B (start codes), not AVCC/HVCC length prefixes. For H.265, ship and load `mcs_codec_h265` before `MCS_CMD_SET_PARAMS` with codec 2 or 3. There is no static H.265 archive.
 2. Pass **one AU per call** (all NALs of one picture, including non-VCL that belong with it).
 3. `frame_type` must match I/IDR vs P/B.
 4. I420 must be the same frame the encoder just compressed (display order).

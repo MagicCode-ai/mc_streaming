@@ -1,29 +1,31 @@
 # MagicCode Streaming Software Specification
 
-**Document Version:** v1.0.0. **Release Date:** September 19, 2026.
+**Document Version:** v2.0.0. **Release Date:** November 1, 2026.
 
 ## 1. Document Overview
 
-This specification defines capabilities, platforms, and functional boundaries of MagicCode Streaming Software v1.0.0. It covers the public session API only. CLI tools (`magic_streaming`, `mcs_file_process`) are developer utilities, not the shipping API.
+This specification defines capabilities, platforms, and functional boundaries of MagicCode Streaming Software v2.0.0. It covers the public session API only. CLI tools (`magic_streaming`, `mcs_file_process`) are developer utilities, not the shipping API.
 
 ### 1.1 Document Status
 
 | Version | Date | Status | Change |
 |---------|------|--------|--------|
-| v1.0.0 | September 19, 2026 | Initial | First public SDK. |
+| v1.0.0 | September 19, 2026 | Initial | First public SDK. H.264 only. |
+| v2.0.0 | November 1, 2026 | Current | H.265 plugin, `mc_streaming_control`, `dec_pic_reenc`, JND fields, NV12/NV21, macOS arm64. |
 
 ## 2. System Requirements
 
 | Platform | CPU | GPU | Notes |
 |----------|-----|-----|-------|
-| Android 8.0+ | ARM64 | Not used | arm64-v8a static library. |
-| iOS / iPadOS 13.0+ | ARM64 | Not used | Device archive only. Simulator is not a target. |
+| Android 8.0+ | ARM64 | Not used | arm64-v8a static and shared `libmc_streaming`, plus `libmcs_codec_h265.so`. |
+| iOS / iPadOS 13.0+ | ARM64 | Not used | Device archive only. Simulator is not a target. H.265: `mcs_codec_h265.framework`. |
+| macOS 11.0+ | ARM64 | Not used | `libmc_streaming` plus `libmcs_codec_h265.dylib`. |
 
 Host builds exist for tests and are not a published mobile archive.
 
 ## 3. Functional Capabilities
 
-The software processes already-encoded H.264 Annex-B access units together with matching I420 source frames. It is not a camera encoder and not a super-resolution library.
+The software processes already-encoded H.264 or H.265 Annex-B access units together with matching source frames (I420, NV12, or NV21). It is not a camera encoder and not a super-resolution library. H.265 is served only when the codec plugin is registered.
 
 ### 3.1 Picture types
 
@@ -36,18 +38,21 @@ The software processes already-encoded H.264 Annex-B access units together with 
 
 | Value | Enumerator | Typical use |
 |-------|------------|-------------|
-| 0 | `MCS_H264_ZERO_DELAY_8BIT` | Real-time calls; lower delay and CPU. Processes P frames. |
-| 1 | `MCS_H264_8BIT` | Processes P and B frames; higher CPU. |
+| 0 | `MCS_H264_ZERO_DELAY_8BIT` | Real-time H.264. Processes P frames. Default. |
+| 1 | `MCS_H264_8BIT` | H.264 P and B; higher CPU. |
+| 2 | `MCS_H265_ZERO_DELAY_8BIT` | Real-time H.265. Requires the plugin. |
+| 3 | `MCS_H265_8BIT` | H.265 P and B; higher CPU. Requires the plugin. |
 
-Internal processing strength is not a public knob. Defaults match the production path used by `mc_streaming_enable`.
+`jnd_enable` 0 skips JND. `dec_pic_reenc` 0 is syntax rewrite (default). `dec_pic_reenc` 1 decodes the AU to display YUV and re-encodes the residual. Not calling `mc_streaming` is streaming off. Zeroing `mc_streaming_ctrl_params_t` keeps the H.264 default.
 
 ### 3.3 Bitstream support
 
 | Feature | Support |
 |---------|---------|
 | 8-bit progressive H.264 Baseline / Main / High | Yes |
+| 8-bit 4:2:0 H.265/HEVC (plugin) | Yes |
 | Interlaced / 10-bit | No |
-| HEVC / AV1 / VP9 | No |
+| AV1 / VP9 | No |
 
 Typical production input is hardware H.264 (MediaCodec / VideoToolbox) Annex-B.
 

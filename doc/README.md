@@ -1,9 +1,9 @@
 # MagicCode Streaming Software — Release Documents
 
-**Product version:** v1.0.0 (`mc_streaming_get_version()` returns `1.0.0`)  
-**Release date:** September 19, 2026
+**Product version:** v2.0.0 (`mc_streaming_get_version()` returns `2.0.0`)  
+**Release date:** November 1, 2026
 
-This folder is the customer-facing document set for the MagicCode Streaming Software SDK (`libMagicCode_streaming.a` + `include/mc_streaming.h`). Layout matches the MagicCode Super-Resolution Software release package.
+This folder is the customer-facing document set for the MagicCode Streaming Software SDK (`libmc_streaming` + `include/mc_streaming.h`). H.264 is builtin. H.265 is the `mcs_codec_h265` plugin. Layout matches the MagicCode Super-Resolution Software release package.
 
 | Document | Audience |
 |----------|----------|
@@ -11,7 +11,7 @@ This folder is the customer-facing document set for the MagicCode Streaming Soft
 | [Specification](MagicCode%20Streaming%20Software%20Specification.md) | Capabilities and limits |
 | [API Reference](MagicCode%20Streaming%20Software%20API%20Reference.md) | Public C API |
 | [Integration Guide](MagicCode%20Streaming%20Software%20Integration%20Guide.md) | Android / iOS linking |
-| [Release Notes](MagicCode%20Streaming%20Software%20Release%20Notes.md) | v1.0.0 changes |
+| [Release Notes](MagicCode%20Streaming%20Software%20Release%20Notes.md) | v2.0.0 changes |
 | [Migration Guide](MagicCode%20Streaming%20Software%20Migration%20Guide.md) | CLI / internal → SDK |
 | [FAQ and Troubleshooting](MagicCode%20Streaming%20Software%20FAQ%20and%20Troubleshooting.md) | Support (English) |
 | [常见问题与故障排除](MagicCode%20Streaming%20Software%20FAQ%20and%20Troubleshooting%20中文.md) | 支持（中文） |

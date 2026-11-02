@@ -1,6 +1,6 @@
 # MagicCode Streaming 软件常见问题与故障排除
 
-**文档版本：** v1.0.0。**发布日期：** 2026 年 9 月 19 日。
+**文档版本：** v2.0.0。**发布日期：** 2026 年 11 月 1 日。
 
 ## 1. 通用问题
 
@@ -29,13 +29,13 @@ MagicCode Streaming 和 VBR 码率控制看起来类似：都是在低复杂度�
 MagicCode Streaming 通过人眼视觉原理（例如人眼的相对敏感度、掩蔽效应、非线性等特性），利用 AI 分析图像内容和像素：对人眼能分辨的地方保留信息，对人眼不能分辨的地方删除信息，从而在降低码率的同时让人眼无感知。但 PSNR、SSIM 这类客观指标基于像素和内容统计比较，所以会看到指标下降。MagicCode Streaming 的目标是节省码率同时主观画质无下降。评价输出码流画质应通过人眼主观观看，不能用客观指标来评价。
 
 **软件会上传我的视频或码流吗？**  
-不会。v1.0.0 不会上报 YUV 或 Annex-B 载荷。标准 SDK 会发送一个很小的技术数据包（应用实例 UUID、设备型号、SDK 版本、平均每帧耗时、尺寸均值、错误码、上报次数），用于**计费/授权计量**和**问题定位**。包内不上报设备 IP。详见《隐私政策》和《数据上报说明》。标准版没有公开开关可关闭上报；如法规或产品形态需要无上报库，请向 MagicCode 书面申请。
+不会。v2.0.0 不会上报 YUV 或 Annex-B 载荷。标准 SDK 会发送一个很小的技术数据包（应用实例 UUID、设备型号、SDK 版本、平均每帧耗时、尺寸均值、错误码、上报次数），用于**计费/授权计量**和**问题定位**。包内不上报设备 IP。详见《隐私政策》和《数据上报说明》。标准版没有公开开关可关闭上报；如法规或产品形态需要无上报库，请向 MagicCode 书面申请。
 
 **应该使用哪个 codec profile？**  
-MagicCode Streaming 提供两个 profile：`MCS_H264_ZERO_DELAY_8BIT` 和 `MCS_H264_8BIT`。`MCS_H264_8BIT` 面向任何视频场景，在任何视频应用中都可以使用，但处理会稍慢，因为算法需要更多运算来覆盖各种视频场景。`MCS_H264_ZERO_DELAY_8BIT` 专为超低延时视频应用设计，例如视频通话。
+H.264：`MCS_H264_ZERO_DELAY_8BIT`（实时）和 `MCS_H264_8BIT`（含 B 帧，CPU 更高）。H.265：`MCS_H265_ZERO_DELAY_8BIT` 和 `MCS_H265_8BIT`，需先加载 `mcs_codec_h265` 插件。`dec_pic_reenc` 为 1 时从解码图重编码残差。`jnd_enable` 为 0 只跳过 JND。完全不调用本库才是关闭 streaming。
 
 **如何读取版本号？**  
-`mc_streaming_get_version()` 返回 `"1.0.0"`。
+`mc_streaming_get_version()` 返回 `"2.0.0"`。
 
 ## 2. 集成常见问题
 
@@ -66,8 +66,8 @@ MagicCode Streaming 提供两个 profile：`MCS_H264_ZERO_DELAY_8BIT` 和 `MCS_H
 
 ## 5. 诊断检查清单
 
-1. `mc_streaming_get_version()` 为 `1.0.0`。
+1. `mc_streaming_get_version()` 为 `2.0.0`。
 2. 记录 `codec_type`、宽、高、`frame_type`、`au_size`、返回码、`bs_size`。
-3. 确认 `libmc_streaming.a` 已加入原生链接。
-4. 确认硬件编码器是 H.264 Annex-B，不是 HEVC。
+3. 确认 `libmc_streaming.a`（或对应动态库）已加入原生链接。H.265 还需加载 `mcs_codec_h265`。
+4. 确认编码器 Annex-B 与所选 codec 一致（H.264 或 H.265）。`MCS_ERR_CODEC_UNAVAILABLE` 表示未加载 H.265 插件。
 5. 上架构建前查阅《已知问题》和 EULA。

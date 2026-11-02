@@ -35,6 +35,8 @@ typedef enum mc_streaming_log_level_e {
 typedef enum mc_streaming_codec_type_e {
     MCS_H264_ZERO_DELAY_8BIT = 0, /* recommended for real-time calls */
     MCS_H264_8BIT            = 1, /* P and B processing; higher CPU */
+    MCS_H265_ZERO_DELAY_8BIT = 2, /* H.265, served by a codec plugin */
+    MCS_H265_8BIT            = 3, /* H.265 P and B processing; higher CPU */
     MCS_MAX_CODEC
 } mc_streaming_codec_type_e;
 
@@ -50,13 +52,28 @@ typedef enum mc_streaming_cmd_e {
     MCS_CMD_GET_STATUS = 1
 } mc_streaming_cmd_e;
 
-#define MC_STREAMING_MAX_WIDTH  (32 * 1024)
-#define MC_STREAMING_MAX_HEIGHT (32 * 1024)
-
 typedef struct mc_streaming_ctrl_params_t {
     mc_streaming_codec_type_e codec_type; /* default MCS_H264_ZERO_DELAY_8BIT */
     mc_streaming_csp_e pic_csp;           /* default MCS_CSP_I420 */
     mc_streaming_log_level_e log_level;   /* default MCS_LOG_ERROR; process-wide */
+    /* M4 JND options (mirror mcs_options_t; read only by plugin codec
+     * sessions — the H.264 builtin session does not read them, so H.264
+     * behavior is unchanged).  Appended at the end; older H.264 callers never
+     * have them read. */
+    int jnd_enable;          /* 0 = closed-loop encode with JND skipped */
+    int skin_skip;           /* skip JND on skin blocks; default 0 */
+    int jnd_strength_level;  /* h264: 0..7 desktop table; h265: -1 auto, 0..2 force */
+    float jnd_scale;         /* extra f_jnd multiplier; default 1.0 */
+    /* 0 = syntax-level rewrite (default): no pixel reconstruct, same as
+     * today.  1 = decode the AU to post-loop-filter display YUV (H.264
+     * deblock, H.265 deblock+SAO) and re-encode from that as fenc.
+     * Reuses partition / intra / inter / skip / MV / ref idx / QP; residual
+     * is re-DCT+quantized from the decoded YUV (not copied). Encoder DPB is
+     * the re-encode recon, not the decoder DPB. JND still uses the original
+     * jnd_enable switch and the decoded YUV (never input->y/u/v). Shared by
+     * H.264 and H.265. Non-8bit / non-4:2:0 still passthrough. Default 0;
+     * older callers that zero the struct or omit this field stay bit-identical. */
+    int dec_pic_reenc;
 } mc_streaming_ctrl_params_t;
 
 typedef struct mc_streaming_status_params_t {
@@ -67,7 +84,7 @@ typedef struct mc_streaming_status_params_t {
 
 typedef struct mc_streaming_input_t {
     /* Display size. Must match coded or display size of the AU.
-     * Each dimension must be in (0, MC_STREAMING_MAX_WIDTH/HEIGHT]. */
+     * Each dimension must be in (0, 32768]. */
     int width, height;
     /* I420: y/u/v planes. NV12/NV21: y = luma, u = interleaved chroma, v unused.
      * Plane layout must match the session pic_csp (see MCS_CMD_SET_PARAMS). */
@@ -96,7 +113,7 @@ typedef struct mc_streaming_output_t {
  * with default ctrl params (1920*1088 / ZERO_DELAY / I420 / ERROR).
  * Session caps grow on a key reinit when coded size, refs, or B-frames
  * exceed the current allocation. input width/height and coded/display
- * size must be <= MC_STREAMING_MAX_WIDTH/HEIGHT (32*1024).
+ * size must be <= 32768 (32*1024) per dimension.
  * Returns MCS_OK when the AU was processed. A negative MCS_ERR_* still
  * means a legal Annex-B AU was written if output->bs_size > 0 (bypass copy).
  * MCS_ERR_INVAL / MCS_ERR_OUTPUT with output->bs_size == 0: nothing emitted. */
@@ -118,7 +135,7 @@ MCS_API int mc_streaming_control(void **handle,
                                  const mc_streaming_ctrl_params_t *ctrl,
                                  mc_streaming_status_params_t *status_info);
 
-/* Static version string, e.g. "1.0.0". Do not free. */
+/* Static version string, e.g. "2.0.0". Do not free. */
 MCS_API const char *mc_streaming_get_version(void);
 
 #ifdef __cplusplus
